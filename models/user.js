@@ -3,10 +3,8 @@ var mongoose    = require('libs/mongoose'),
     schema;
 
 schema = new mongoose.Schema({
-    local: {
-        login       : String,
-        password    : String
-    }
+    username    : String,
+    password    : String
 });
 
 schema.methods.generateHash = function(password) {
@@ -14,7 +12,9 @@ schema.methods.generateHash = function(password) {
 };
 
 schema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.local.password);
+    // @todo: add bcrypt compare after sign up implementing
+    return this.password == password;
+//    return bcrypt.compareSync(password, this.password);
 };
 
 exports.User = mongoose.model('User', schema);

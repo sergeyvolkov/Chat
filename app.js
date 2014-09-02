@@ -5,9 +5,14 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
     config = require('configs'),
+    passport = require('passport'),
+    flash = require('connect-flash'),
     app;
 
 app = express();
+
+require('libs/mongoose');
+require('configs/passport')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -22,8 +27,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session( {secret: config.get('session:secret')} ));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
-require('routes')(app);
+require('routes')(app, passport);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
