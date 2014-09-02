@@ -4,13 +4,13 @@ module.exports = function(app, passport) {
     });
 
     app.get('/login', function(req, res) {
-        res.render('login');
+        res.render('login', { message: req.flash('loginMessage') });
     });
     app.post('/login',
         passport.authenticate('local-login', {
             successRedirect :   '/chat',
             failureRedirect :   '/login',
-            failureFlash    :   'Invalid credentials'
+            failureFlash    :   true
         })
     );
 
@@ -18,6 +18,15 @@ module.exports = function(app, passport) {
         req.logout();
         res.redirect('/');
     });
+
+    app.get('/sign-up', function(req, res) {
+        res.render('../views/signup.hbs', { message: req.flash('signupMessage') });
+    });
+    app.post('/sign-up', passport.authenticate('local-signup', {
+        successRedirect:    '/chat',
+        failureRedirect:    '/sign-up',
+        failureFlash:       true
+    }));
 
     app.get('/chat', function(req, res) {
         res.render('chat', {title: "Chat room"});

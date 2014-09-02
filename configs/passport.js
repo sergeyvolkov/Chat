@@ -26,6 +26,43 @@ module.exports = function(passport) {
 
         }));
 
+    passport.use('local-signup', new LocalStrategy({
+            usernameField       :   'login',
+            passwordField       :   'password',
+            passReqToCallback   :   true
+        },
+        function(req, login, password, callback) {
+            process.nextTick(function() {
+                User.findOne({'username': login}, function(err, user) {
+                    var newUser;
+
+                    if (err) {
+                        return callback(err);
+                    }
+
+                    if (user) {
+                        return callback(
+                            null,
+                            false,
+                            req.flash('signupMessage', 'User with current login already registered')
+                        );
+                    } else {
+                        newUser = new User();
+                        newUser.username    =   login;
+                        newUser.password    =   newUser.generateHash(password);
+
+                        newUser.save(function(err) {
+                            if (err) {
+                                throw err;
+                            }
+
+                            return callback(null, newUser);
+                        });
+                    }
+                });
+            });
+        }));
+
 
     passport.serializeUser(function(user, done) {
         done(null, user.id);
