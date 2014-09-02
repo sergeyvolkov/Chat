@@ -1,9 +1,14 @@
-var express = require('express');
-var router = express.Router();
+module.exports = function(app, passport) {
+    app.get('/', function(req, res) {
+        res.render('../views/index.hbs');
+    });
 
-/* GET home page. */
-router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
-});
-
-module.exports = router;
+    app.get('/sign-up', function(req, res) {
+        res.render('../views/signup.hbs');
+    });
+    app.post('/sign-up', passport.authenticate('local-signup', {
+        successRedirect:    '/profile',
+        failureRedirect:    '/sign-up',
+        failureFlash:       'OOOPS'
+    }));
+};
