@@ -1,0 +1,22 @@
+{
+  "name": "Chat",
+  "version": "0.0.1",
+  "homepage": "https://github.com/sergeyvolkov/Chat",
+  "authors": [
+    "Sergey Volkov <sergey.volkov.kh@yandex.ua>"
+  ],
+  "description": "Multiuser chat on websockets",
+  "main": "../../app.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0"
+  }
+}
