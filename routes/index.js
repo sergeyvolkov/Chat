@@ -14,6 +14,11 @@ module.exports = function(app, passport) {
         })
     );
 
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
     app.get('/chat', function(req, res) {
         res.render('chat', {title: "Chat room"});
     });
