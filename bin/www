@@ -10,3 +10,5 @@ server = app.listen(app.get('port'), function() {
     // @todo: debug doesn't work below
     console.log('Express server listening on port ' + server.address().port);
 });
+
+require('../sockets')(server);
