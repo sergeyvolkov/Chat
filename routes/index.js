@@ -29,6 +29,10 @@ module.exports = function(app, passport) {
     }));
 
     app.get('/chat', function(req, res) {
+        if (!req.user) {
+            res.redirect('/login');
+        }
+
         res.render('chat', {title: "Chat room"});
     });
 };
