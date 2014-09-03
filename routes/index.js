@@ -20,7 +20,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/sign-up', function(req, res) {
-        res.render('../views/signup.hbs', { message: req.flash('signupMessage') });
+        res.render('../views/signup', { message: req.flash('signupMessage') });
     });
     app.post('/sign-up', passport.authenticate('local-signup', {
         successRedirect:    '/chat',

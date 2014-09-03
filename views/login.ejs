@@ -1,8 +1,9 @@
+<% layout('layout/layout') %>
+<% block('title', 'Login') %>
+
 <h1>Login page</h1>
 
-{{#if message.length}}
-    <div class="alert alert-danger">{{message}}</div>
-{{/if}}
+<div class="alert alert-danger"><%= message %></div>
 
 <form class="form-horizontal" method="post">
     <div class="form-group">

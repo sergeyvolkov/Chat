@@ -1,8 +1,9 @@
+<% layout('layout/layout') %>
+<% block('title', 'Signup') %>
+
 <h1>Registration page:</h1>
 
-{{#if message.length}}
-    <div class="alert alert-danger">{{message}}</div>
-{{/if}}
+<div class="alert alert-danger"><%= message %></div>
 
 <form class="form-horizontal" role="form" method="post">
     <div class="form-group">
