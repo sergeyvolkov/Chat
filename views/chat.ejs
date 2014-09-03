@@ -1,4 +1,14 @@
 <% layout('layout/layout') %>
 <% block('title', 'Chat room') %>
+<% stylesheet('/stylesheets/chat.css') %>
+<% script('/vendor/bower_components/socket.io-client/socket.io.js') %>
+<% script('/javascripts/chat.js') %>
 
 Chat page
+<div id="chat">
+    <div id="messages"></div>
+    <div id="tools">
+        <textarea id="message" placeholder="Enter you message here" autofocus autocomplete="off"></textarea>
+        <button id="send-message" class="btn btn-primary btn-lg">Send</button>
+    </div>
+</div>

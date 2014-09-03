@@ -1,0 +1,36 @@
+#chat {
+    padding: 5px;
+}
+
+#chat > div {
+    width: 100%;
+}
+
+#messages {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 300px;
+    background-color: rgba(204, 204, 204, .5);
+}
+
+#tools {
+    box-sizing: border-box;
+    margin-top: 20px;
+}
+
+#tools > textarea,
+#tools > button
+{
+    box-sizing: border-box;
+    height: 80px;
+}
+
+#message {
+    width: 80%;
+    font-size: 1.5em;
+}
+
+#send-message {
+    width: 19%;
+    float: right;
+}
