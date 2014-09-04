@@ -2,13 +2,19 @@ $(document).ready(function() {
     var socket = io(),
         $messages = $('.messages');
 
-    socket.on('message',  function(message) {
-        printMessage(message);
-    });
+    socket
+        .on('message',  function(message) {
+            printMessage(message);
+        })
+        .on('start typing', function() {
+            typingMessage(true);
+        });
 
-    $('#send-message').on('click' , sendMessage);
+    $('#send-message').on('click', sendMessage);
+    $('#message').on('input', typeMessage);
 
     function sendMessage() {
+        console.log('send');
         var $message = $('#message'),
             messageContent = $message.val();
 
@@ -16,6 +22,11 @@ $(document).ready(function() {
             printMessage(messageContent, true);
         });
         $message.val('');
+    }
+
+    // for other typing icon shown
+    function typeMessage() {
+        socket.emit('start typing');
     }
 
     function printMessage(message, isOwn) {
@@ -32,10 +43,13 @@ $(document).ready(function() {
                     .text(message)
             );
 
-        console.log($newMessage);
-
         $newMessage.appendTo($messages);
 
         return true;
+    }
+
+    function typingMessage(show) {
+        var display = (show) ? 'block' : 'none';
+        $('.typing').css('display', display);
     }
 });

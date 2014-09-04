@@ -1,6 +1,7 @@
 <% layout('layout/layout') %>
 <% block('title', 'Chat room') %>
 <% stylesheet('/stylesheets/chat.css') %>
+<% stylesheet('//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') %>
 <% script('/vendor/bower_components/socket.io-client/socket.io.js') %>
 <% script('/javascripts/chat.js') %>
 
@@ -14,7 +15,9 @@ Chat page
             <div class="message">When the seashell sings for madagascar, all skiffs mark golden, salty krakens.</div>
         </div>
     </div>
-    <div class="system-messages"></div>
+    <div class="system-messages">
+        <div class="typing"><i class="fa fa-pencil"></i>Someone is typing... </div>
+    </div>
     <div class="tools">
         <textarea id="message" placeholder="Enter you message here" autofocus autocomplete="off"></textarea>
         <button id="send-message" class="btn btn-primary btn-lg">Send</button>
