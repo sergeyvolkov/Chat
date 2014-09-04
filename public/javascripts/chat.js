@@ -1,6 +1,6 @@
 $(document).ready(function() {
     var socket = io(),
-        $messages = $('#messages');
+        $messages = $('.messages');
 
     socket.on('message',  function(message) {
         printMessage(message);
@@ -13,17 +13,28 @@ $(document).ready(function() {
             messageContent = $message.val();
 
         socket.emit('message', messageContent, function() {
-            printMessage(messageContent);
+            printMessage(messageContent, true);
         });
         $message.val('');
     }
 
-    function printMessage(message) {
-        var $newMessage = $('<span>');
+    function printMessage(message, isOwn) {
+        var $newMessage,
+            isOwnClass;
 
-        $newMessage.text(message)
-            .addClass('message')
-            .appendTo($messages);
+        isOwnClass = (isOwn) ? ' own-message' : '';
+
+        $newMessage = $('<div>')
+            .addClass('message-wrapper' + isOwnClass)
+            .append(
+                $('<div>')
+                    .addClass('message')
+                    .text(message)
+            );
+
+        console.log($newMessage);
+
+        $newMessage.appendTo($messages);
 
         return true;
     }

@@ -5,9 +5,17 @@
 <% script('/javascripts/chat.js') %>
 
 Chat page
-<div id="chat">
-    <div id="messages"></div>
-    <div id="tools">
+<div class="chat-container">
+    <div class="messages">
+        <div class="message-wrapper">
+            <div class="message">A falsis, advena rusticus idoleum.</div>
+        </div>
+        <div class="message-wrapper own-message">
+            <div class="message">When the seashell sings for madagascar, all skiffs mark golden, salty krakens.</div>
+        </div>
+    </div>
+    <div class="system-messages"></div>
+    <div class="tools">
         <textarea id="message" placeholder="Enter you message here" autofocus autocomplete="off"></textarea>
         <button id="send-message" class="btn btn-primary btn-lg">Send</button>
     </div>
