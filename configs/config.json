@@ -13,7 +13,13 @@
         }
     },
     "session": {
-        "secret": "foobartest"
+        "secret": "foobartest",
+        "sid": "sid",
+        "cookie": {
+            "path": "/",
+            "httpOnly": true,
+            "maxAge": null
+        }
     }
 
 }

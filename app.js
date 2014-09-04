@@ -8,6 +8,7 @@ var express = require('express'),
     passport = require('passport'),
     flash = require('connect-flash'),
     ejs = require('ejs-locals'),
+    sessionStore = require('libs/sessionStore'),
     app;
 
 app = express();
@@ -28,7 +29,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session( {secret: config.get('session:secret')} ));
+app.use(session({
+    secret: config.get('session:secret'),
+    key: config.get('session:key'),
+    cookie: config.get('session:cookie'),
+    store: sessionStore
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
