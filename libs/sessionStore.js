@@ -1,7 +1,9 @@
 var mongoose = require('mongoose'),
-    express = require('express'),
-    mongoStore = require('connect-mongo')(express),
+    session = require('express-sessions'),
+    mongoStore = require('connect-mongo')(session),
     sessionStore;
+
+console.log(mongoStore); return;
 
 sessionStore = new MongoStore({mongoose_connection: mongoose.connection});
 
