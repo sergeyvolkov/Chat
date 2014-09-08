@@ -2,7 +2,7 @@
 <html>
   <head>
     <title><%= blocks.title %></title>
-    <script src="vendor/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/vendor/bower_components/jquery/dist/jquery.min.js"></script>
     <%- scripts %>
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/vendor/bower_components/bootstrap/dist/css/bootstrap.css">
@@ -11,6 +11,8 @@
   <body>
       <%- partial('partial/nav.ejs') %>
 
-    <%- body %>
+      <div class="container">
+          <%- body %>
+      </div>
   </body>
 </html>
