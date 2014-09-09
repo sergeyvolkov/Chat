@@ -12,6 +12,11 @@
 
 .message-wrapper.own-message {
   text-align: right; }
+.message-wrapper.system-message {
+  color: #ccc;
+  font-style: italic; }
+.message-wrapper:not(:last-child) {
+  margin-bottom: 10px; }
 
 .message {
   display: inline-block;

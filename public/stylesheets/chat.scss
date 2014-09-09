@@ -19,6 +19,15 @@
   &.own-message {
     text-align: right;
   }
+
+  &.system-message {
+    color: #ccc;
+    font-style: italic;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 10px;
+  }
 }
 
 .message {

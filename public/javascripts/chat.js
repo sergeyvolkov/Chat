@@ -3,7 +3,7 @@ $(document).ready(function() {
         $messages = $('.messages');
 
     socket.emit('user join', {}, function() {
-        printMessage('Joined to chat');
+        printMessage('You are joined to chat', 'system');
     });
 
     socket
@@ -11,7 +11,7 @@ $(document).ready(function() {
             printMessage(message);
         })
         .on('user join', function() {
-            printMessage('Someone is joined');
+            printMessage('Someone is joined', 'system');
         })
         .on('start typing', function() {
             typingMessage(true);
@@ -20,8 +20,7 @@ $(document).ready(function() {
             typingMessage(false);
         })
         .on('user left', function() {
-            console.log('user left');
-            printMessage('Someone is left :(');
+            printMessage('Someone is left :(', 'system');
         });
 
     $('#send-message').on('click', sendMessage);
@@ -32,7 +31,7 @@ $(document).ready(function() {
             messageContent = $message.val();
 
         socket.emit('message', messageContent, function() {
-            printMessage(messageContent, true);
+            printMessage(messageContent, 'own');
         });
         socket.emit('end typing');
         $message.val('');
@@ -45,14 +44,14 @@ $(document).ready(function() {
         socket.emit(action);
     }
 
-    function printMessage(message, isOwn) {
+    function printMessage(message, type) {
         var $newMessage,
-            isOwnClass;
+            typeClass;
 
-        isOwnClass = (isOwn) ? ' own-message' : '';
+        typeClass = ' ' + (type) + '-message';
 
         $newMessage = $('<div>')
-            .addClass('message-wrapper' + isOwnClass)
+            .addClass('message-wrapper' + typeClass)
             .append(
                 $('<div>')
                     .addClass('message')
