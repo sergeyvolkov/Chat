@@ -1,6 +1,7 @@
 $(document).ready(function() {
     var socket = io(),
-        $messages = $('.messages');
+        $messages = $('.messages'),
+        typingTimer;
 
     socket.emit('user join', {}, function() {
         printMessage('You are joined to chat', 'system');
@@ -24,7 +25,8 @@ $(document).ready(function() {
         });
 
     $('#send-message').on('click', sendMessage);
-    $('#message').on('input', typeMessage);
+    $('#message').on('input', typeMessage)
+        .on('keydown', endTypeMessage);
 
     function sendMessage() {
         var $message = $('#message'),
@@ -42,6 +44,14 @@ $(document).ready(function() {
 
         action = ($('#message').val()) ? 'start typing' : 'end typing';
         socket.emit(action);
+
+        typingTimer = setTimeout(function() {
+            socket.emit('end typing');
+        }, 1000);
+    }
+
+    function endTypeMessage() {
+        clearTimeout(typingTimer);
     }
 
     function printMessage(message, type) {

@@ -1,6 +1,5 @@
 module.exports = function(app, passport) {
     app.get('/', function(req, res) {
-        re
 
         res.render('index', {title: "Chat"});
     });
