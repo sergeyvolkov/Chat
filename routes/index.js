@@ -1,5 +1,7 @@
 module.exports = function(app, passport) {
     app.get('/', function(req, res) {
+        re
+
         res.render('index', {title: "Chat"});
     });
 
@@ -29,9 +31,9 @@ module.exports = function(app, passport) {
     }));
 
     app.get('/chat', function(req, res) {
-//        if (!req.user) {
-//            res.redirect('/login');
-//        }
+        if (!req.user) {
+            res.redirect('/login');
+        }
 
         res.render('chat', {title: "Chat room"});
     });

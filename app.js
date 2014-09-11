@@ -33,8 +33,6 @@ app.use(session({
     secret: config.get('session:secret'),
     key: config.get('session:key'),
     cookie: config.get('session:cookie')
-//    cookie: config.get('session:cookie'),
-//    store: sessionStore
 }));
 app.use(passport.initialize());
 app.use(passport.session());
