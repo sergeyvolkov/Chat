@@ -8,7 +8,6 @@ var express = require('express'),
     passport = require('passport'),
     flash = require('connect-flash'),
     ejs = require('ejs-locals'),
-//    sessionStore = require('libs/sessionStore'),
     app;
 
 app = express();
@@ -21,8 +20,6 @@ app.engine('ejs', ejs);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
