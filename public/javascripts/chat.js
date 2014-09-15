@@ -1,27 +1,56 @@
 $(document).ready(function() {
-    var users = [],
-        socket = io(),
+    var socket = io(),
         typingTimer,
         username,
         $messages = $('.messages'),
-        $authModal = $('#auth-modal');
+        $authModal = $('#auth-modal'),
+        modalOptions = {};
 
-    $authModal.modal({
+    modalOptions = {
         backdrop:   'static',
         keyboard:   false,
         show:       true
-    });
+    };
+    $authModal.modal(modalOptions);
 
     // check login
     $('#auth-submit').on('click', function() {
         username = $('#login').val();
         $authModal.modal('hide');
-    });
-    return true;
 
-    socket.emit('user join', {}, function() {
-        printMessage('You are joined to chat', 'system');
+        socket.emit('user join', username, function(err, data) {
+            if (err) {
+                username = null;
+                $authModal.modal(modalOptions);
+            }
+
+            printMessage(data);
+        });
     });
+
+    // websockets behaviour
+    socket.on('user join', function(data) {
+        printMessage(data);
+    });
+
+    function printMessage(message) {
+        var $newMessage,
+            content;
+
+        content = message.sender
+            + ' [' + message.date + ']' + '<br>'
+            + message.content + '<br><br>';
+
+        $newMessage = $('<div>')
+            .addClass('system')
+            .html(content);
+
+        $newMessage.appendTo($messages);
+
+        return true;
+    }
+
+    return true;
 
     socket
         .on('message',  function(message) {
@@ -70,24 +99,6 @@ $(document).ready(function() {
         clearTimeout(typingTimer);
     }
 
-    function printMessage(message, type) {
-        var $newMessage,
-            typeClass;
-
-        typeClass = ' ' + (type) + '-message';
-
-        $newMessage = $('<div>')
-            .addClass('message-wrapper' + typeClass)
-            .append(
-                $('<div>')
-                    .addClass('message')
-                    .text(message)
-            );
-
-        $newMessage.appendTo($messages);
-
-        return true;
-    }
 
     function typingMessage(show) {
         var display = (show) ? 'block' : 'none';
