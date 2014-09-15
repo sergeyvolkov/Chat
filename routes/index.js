@@ -1,26 +1,28 @@
 module.exports = function(app, passport) {
     app.get('/', function(req, res) {
-
         res.render('index', {title: "Chat"});
     });
 
     app.get('/login', function(req, res) {
+        return true;
         res.render('login', { message: req.flash('loginMessage') });
     });
-    app.post('/login',
-        passport.authenticate('local-login', {
-            successRedirect :   '/chat',
-            failureRedirect :   '/login',
-            failureFlash    :   true
-        })
-    );
+//    app.post('/login',
+//        passport.authenticate('local-login', {
+//            successRedirect :   '/chat',
+//            failureRedirect :   '/login',
+//            failureFlash    :   true
+//        })
+//    );
 
     app.get('/logout', function(req, res) {
+        return true;
         req.logout();
         res.redirect('/');
     });
 
     app.get('/sign-up', function(req, res) {
+        return true;
         res.render('../views/signup', { message: req.flash('signupMessage') });
     });
     app.post('/sign-up', passport.authenticate('local-signup', {
@@ -30,9 +32,9 @@ module.exports = function(app, passport) {
     }));
 
     app.get('/chat', function(req, res) {
-        if (!req.user) {
-            res.redirect('/login');
-        }
+//        if (!req.user) {
+//            res.redirect('/login');
+//        }
 
         res.render('chat', {title: "Chat room"});
     });

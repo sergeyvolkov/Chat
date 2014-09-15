@@ -1,7 +1,23 @@
 $(document).ready(function() {
-    var socket = io(),
+    var users = [],
+        socket = io(),
+        typingTimer,
+        username,
         $messages = $('.messages'),
-        typingTimer;
+        $authModal = $('#auth-modal');
+
+    $authModal.modal({
+        backdrop:   'static',
+        keyboard:   false,
+        show:       true
+    });
+
+    // check login
+    $('#auth-submit').on('click', function() {
+        username = $('#login').val();
+        $authModal.modal('hide');
+    });
+    return true;
 
     socket.emit('user join', {}, function() {
         printMessage('You are joined to chat', 'system');

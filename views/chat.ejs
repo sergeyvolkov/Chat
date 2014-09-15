@@ -3,6 +3,7 @@
 <% stylesheet('/stylesheets/chat.css') %>
 <% stylesheet('//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') %>
 <% script('/vendor/bower_components/socket.io-client/socket.io.js') %>
+<% script('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js') %>
 <% script('/javascripts/chat.js') %>
 
 Chat page
@@ -19,7 +20,31 @@ Chat page
         <div class="typing"><i class="fa fa-pencil"></i>Someone is typing... </div>
     </div>
     <div class="tools">
-        <textarea id="message" placeholder="Enter you message here" autofocus autocomplete="off"></textarea>
+        <textarea id="message" placeholder="Enter you message here" autocomplete="off"></textarea>
         <button id="send-message" class="btn btn-primary btn-lg">Send</button>
     </div>
 </div>
+
+
+<div class="modal fade" id="auth-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Enter your login</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <label class="sr-only" for="login">Password</label>
+                        <input type="text" class="form-control" id="login" placeholder="Login" autofocus>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="auth-submit">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
