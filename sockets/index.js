@@ -1,21 +1,13 @@
 module.exports = function(server) {
     var io = require('socket.io').listen(server),
-        users = [];
+        users = [],
+        usersList = [];
 
     io.set('origins', 'localhost:*');
 
     setInterval(function() {
-        var i,
-            length = users.length,
-            usernames = [];
-
-        for (i = 0; i < length; i++) {
-            usernames.push(users[i].username);
-        }
-
-        console.log('Usernames: ' + usernames);
-
-    }, 5000);
+        console.log('Usernames: ' + usersList);
+    }, 10e3);
 
     io.on('connection', function(socket) {
         socket.on('user join', function(username, callback) {
@@ -40,6 +32,8 @@ module.exports = function(server) {
 
             message = createMessage(options);
             callback(err, message);
+
+            io.sockets.emit('users list', usersList);
         });
 
         socket.on('message', function(data, callback) {
@@ -71,6 +65,8 @@ module.exports = function(server) {
                 socket.broadcast.emit('user left', message);
 
                 removeUser(user.username);
+
+                io.sockets.emit('users list', usersList);
             }
 
         });
@@ -107,10 +103,12 @@ module.exports = function(server) {
     }
 
     function addUser(username, socket) {
-        return users.push({
+        users.push({
             username: username,
             socket: socket
         });
+
+        usersList.push(username);
     }
 
     function removeUser(username) {
@@ -120,6 +118,7 @@ module.exports = function(server) {
         for (i = 0; i < length; i++) {
             if (users[i].username == username) {
                 users.splice(i, 1);
+                usersList.splice(i, 1);
                 return true;
             }
         }

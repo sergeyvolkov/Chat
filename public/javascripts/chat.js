@@ -59,6 +59,9 @@ $(document).ready(function() {
         })
         .on('user left', function(data) {
             printMessage(data);
+        })
+        .on('users list', function(data) {
+            updateUserList(data);
         });
 
     function printMessage(message) {
@@ -76,6 +79,10 @@ $(document).ready(function() {
         $newMessage.appendTo($messages);
 
         return true;
+    }
+
+    function updateUserList(users) {
+        $('.users').text(users.join(', '));
     }
 
 });
