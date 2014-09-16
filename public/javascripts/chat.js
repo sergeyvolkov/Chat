@@ -1,7 +1,7 @@
 $(document).ready(function() {
     var socket = io(),
-        typingTimer,
         username,
+        $message = $('#message'),
         $messages = $('.messages'),
         $authModal = $('#auth-modal'),
         modalOptions = {};
@@ -78,37 +78,4 @@ $(document).ready(function() {
         return true;
     }
 
-    return true;
-
-    socket
-        .on('start typing', function() {
-            typingMessage(true);
-        })
-        .on('end typing', function() {
-            typingMessage(false);
-        });
-
-    $('#message').on('input', typeMessage)
-        .on('keydown', endTypeMessage);
-
-    function typeMessage() {
-        var action;
-
-        action = ($('#message').val()) ? 'start typing' : 'end typing';
-        socket.emit(action);
-
-        typingTimer = setTimeout(function() {
-            socket.emit('end typing');
-        }, 1000);
-    }
-
-    function endTypeMessage() {
-        clearTimeout(typingTimer);
-    }
-
-
-    function typingMessage(show) {
-        var display = (show) ? 'block' : 'none';
-        $('.typing').css('display', display);
-    }
 });
