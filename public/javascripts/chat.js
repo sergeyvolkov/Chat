@@ -13,6 +13,9 @@ $(document).ready(function() {
     };
     $authModal.modal(modalOptions);
 
+    // set un-auth user as "guest"
+    socket.emit('guest mode');
+
     // check login
     $('#auth-submit').on('click', function() {
         username = $('#login').val();
@@ -82,7 +85,12 @@ $(document).ready(function() {
     }
 
     function updateUserList(users) {
-        $('.users').text(users.join(', '));
+        var content;
+
+        content = 'Online users: ' + users.authUsers.join(', ') + '<br>';
+        content += 'Aninims: ' + users.guests;
+
+        $('.users').html(content);
     }
 
 });

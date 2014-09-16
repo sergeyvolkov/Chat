@@ -1,15 +1,23 @@
 module.exports = function(server) {
     var io = require('socket.io').listen(server),
         users = [],
-        usersList = [];
+        usersList = {
+            authUsers:  [],
+            guests:     0
+        };
 
     io.set('origins', 'localhost:*');
 
     setInterval(function() {
-        console.log('Usernames: ' + usersList);
-    }, 10e3);
+        console.log('Usernames: ' + usersList.authUsers);
+        console.log('Guests: ' + usersList.guests);
+    }, 2e3);
 
     io.on('connection', function(socket) {
+        socket.on('guest mode', function() {
+            ++usersList.guests;
+        });
+
         socket.on('user join', function(username, callback) {
             var err = null,
                 options = {},
@@ -25,6 +33,8 @@ module.exports = function(server) {
                 socket.broadcast.emit('user join', message);
 
                 options.content = 'You have been joined to chat (username: ' + username + ')';
+
+                --usersList.guests;
             } else {
                 err = true;
                 options.content = 'User ' + username + ' already exists';
@@ -66,12 +76,19 @@ module.exports = function(server) {
 
                 removeUser(user.username);
 
-                io.sockets.emit('users list', usersList);
+            } else {
+                --usersList.guests;
             }
+
+            io.sockets.emit('users list', usersList);
 
         });
 
     });
+
+    setInterval(function() {
+        io.sockets.emit('users list', usersList);
+    }, 2e3);
 
     function createMessage(options) {
         var sender = options.sender || 'aninim',
@@ -108,7 +125,7 @@ module.exports = function(server) {
             socket: socket
         });
 
-        usersList.push(username);
+        usersList.authUsers.push(username);
     }
 
     function removeUser(username) {
@@ -118,7 +135,7 @@ module.exports = function(server) {
         for (i = 0; i < length; i++) {
             if (users[i].username == username) {
                 users.splice(i, 1);
-                usersList.splice(i, 1);
+                usersList.authUsers.splice(i, 1);
                 return true;
             }
         }
