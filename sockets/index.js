@@ -5,7 +5,16 @@ module.exports = function(server) {
     io.set('origins', 'localhost:*');
 
     setInterval(function() {
-        console.log(users);
+        var i,
+            length = users.length,
+            usernames = [];
+
+        for (i = 0; i < length; i++) {
+            usernames.push(users[i].username);
+        }
+
+        console.log('Usernames: ' + usernames);
+
     }, 5000);
 
     io.on('connection', function(socket) {
@@ -15,8 +24,8 @@ module.exports = function(server) {
                 message;
 
             options.sender = 'System';
-            if (users.indexOf(username) === -1) {
-                users.push(username);
+            if (!findBy('username', username)) {
+                addUser(username, socket);
 
                 // create broadcast message
                 options.content = username + ' has been joined now';
@@ -34,8 +43,10 @@ module.exports = function(server) {
         });
 
         socket.on('message', function(data, callback) {
-            socket.broadcast.emit('message', data);
-            callback && callback();
+            var message = createMessage(data);
+
+            socket.broadcast.emit('message', message);
+            callback && callback(message);
         });
 
         socket.on('start typing', function() {
@@ -47,8 +58,21 @@ module.exports = function(server) {
         });
 
         socket.on('disconnect', function() {
-            console.log('user left');
-            socket.broadcast.emit('user left');
+            var user = findBy('socket', socket),
+                options = {},
+                message;
+
+            if (user) {
+                options.sender = 'System';
+                options.content = 'User ' + user.username + ' left chat';
+
+                message = createMessage(options);
+
+                socket.broadcast.emit('user left', message);
+
+                removeUser(user.username);
+            }
+
         });
 
     });
@@ -63,5 +87,43 @@ module.exports = function(server) {
             content:    options.content,
             date:       currentTime
         };
+    }
+
+    function findBy(key, needle) {
+        var i,
+            length = users.length;
+
+        if (key != 'username' && key != 'socket') {
+            return null;
+        }
+
+        for (i = 0; i < length; i++) {
+            if (users[i][key] == needle) {
+                return users[i];
+            }
+        }
+
+        return null;
+    }
+
+    function addUser(username, socket) {
+        return users.push({
+            username: username,
+            socket: socket
+        });
+    }
+
+    function removeUser(username) {
+        var i,
+            length = users.length;
+
+        for (i = 0; i < length; i++) {
+            if (users[i].username == username) {
+                users.splice(i, 1);
+                return true;
+            }
+        }
+
+        return false;
     }
 };

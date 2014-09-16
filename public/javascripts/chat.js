@@ -28,10 +28,38 @@ $(document).ready(function() {
         });
     });
 
-    // websockets behaviour
-    socket.on('user join', function(data) {
-        printMessage(data);
+    // send message
+    $('#send-message').on('click', function() {
+        var $message = $('#message'),
+            message = {};
+
+        message.content = $message.val();
+        message.sender = username;
+
+        socket.emit('message', message, function(message) {
+            printMessage(message);
+        });
+        $message.val('');
     });
+
+    // close page
+    $(window).bind("unload", function() {
+        if (username) {
+            socket.disconnect(username);
+        }
+    });
+
+    // websockets behaviour
+    socket
+        .on('user join', function(data) {
+            printMessage(data);
+        })
+        .on('message', function(data) {
+            printMessage(data);
+        })
+        .on('user left', function(data) {
+            printMessage(data);
+        });
 
     function printMessage(message) {
         var $newMessage,
@@ -53,36 +81,15 @@ $(document).ready(function() {
     return true;
 
     socket
-        .on('message',  function(message) {
-            printMessage(message);
-        })
-        .on('user join', function() {
-            printMessage('Someone is joined', 'system');
-        })
         .on('start typing', function() {
             typingMessage(true);
         })
         .on('end typing', function() {
             typingMessage(false);
-        })
-        .on('user left', function() {
-            printMessage('Someone is left :(', 'system');
         });
 
-    $('#send-message').on('click', sendMessage);
     $('#message').on('input', typeMessage)
         .on('keydown', endTypeMessage);
-
-    function sendMessage() {
-        var $message = $('#message'),
-            messageContent = $message.val();
-
-        socket.emit('message', messageContent, function() {
-            printMessage(messageContent, 'own');
-        });
-        socket.emit('end typing');
-        $message.val('');
-    }
 
     function typeMessage() {
         var action;
