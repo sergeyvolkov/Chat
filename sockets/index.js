@@ -6,7 +6,7 @@ module.exports = function(server) {
             guests:     0
         };
 
-    io.set('origins', 'localhost:*');
+    io.set('origins', '*:*');
 
     setInterval(function() {
         console.log('Usernames: ' + usersList.authUsers);
