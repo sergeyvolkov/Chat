@@ -4,7 +4,8 @@ $(document).ready(function() {
         $message = $('#message'),
         $messages = $('.messages'),
         $authModal = $('#auth-modal'),
-        modalOptions = {};
+        modalOptions = {},
+        typing;
 
     modalOptions = {
         backdrop:   'static',
@@ -29,6 +30,19 @@ $(document).ready(function() {
 
             printMessage(data);
         });
+    });
+
+    // typing
+    $message.on('input', function() {
+        socket.emit('start typing', username);
+        if (typing != undefined) {
+            clearTimeout(typing);
+        }
+
+        typing = setTimeout(function() {
+            socket.emit('end typing', username);
+        }, 1e3);
+
     });
 
     // send message
@@ -57,8 +71,15 @@ $(document).ready(function() {
         .on('user join', function(data) {
             printMessage(data);
         })
+        .on('start typing', function(data) {
+            typeMessage('start', data);
+        })
+        .on('end typing', function(data) {
+            typeMessage('end', data);
+        })
         .on('message', function(data) {
             printMessage(data);
+            typeMessage('end', data.sender);
         })
         .on('user left', function(data) {
             printMessage(data);
@@ -91,6 +112,29 @@ $(document).ready(function() {
         content += 'Aninims: ' + users.guests;
 
         $('.users').html(content);
+    }
+
+    function typeMessage(action, username) {
+        var $systemMessages = $('.system-messages'),
+            $typeDiv,
+            $existMessage;
+
+        /**
+         * if system message with same user and action already exists and action == end, then remove exists message
+         * if system message doesn't exist and action == start, then add new
+         */
+        $existMessage = $systemMessages.find('[data-username="' + username + '"]');
+        if ($existMessage.length && action == 'end') {
+            $existMessage.remove();
+        } else if (!$existMessage.length && action == 'start') {
+            $typeDiv = $('<div>', {
+                'data-username': username,
+                text: username + ' is typing'
+            });
+
+            $typeDiv.appendTo($systemMessages);
+        }
+
     }
 
 });

@@ -11,7 +11,7 @@ module.exports = function(server) {
     setInterval(function() {
         console.log('Usernames: ' + usersList.authUsers);
         console.log('Guests: ' + usersList.guests);
-    }, 2e3);
+    }, 10e3);
 
     io.on('connection', function(socket) {
         socket.on('guest mode', function() {
@@ -35,6 +35,7 @@ module.exports = function(server) {
                 options.content = 'You have been joined to chat (username: ' + username + ')';
 
                 --usersList.guests;
+                usersList.guests = (usersList.guests < 0) ? 0 : usersList.guests;
             } else {
                 err = true;
                 options.content = 'User ' + username + ' already exists';
@@ -53,12 +54,12 @@ module.exports = function(server) {
             callback && callback(message);
         });
 
-        socket.on('start typing', function() {
-            socket.broadcast.emit('start typing');
+        socket.on('start typing', function(data) {
+            socket.broadcast.emit('start typing', data);
         });
 
-        socket.on('end typing', function() {
-            socket.broadcast.emit('end typing');
+        socket.on('end typing', function(data) {
+            socket.broadcast.emit('end typing', data);
         });
 
         socket.on('disconnect', function() {
@@ -78,6 +79,7 @@ module.exports = function(server) {
 
             } else {
                 --usersList.guests;
+                usersList.guests = (usersList.guests < 0) ? 0 : usersList.guests;
             }
 
             io.sockets.emit('users list', usersList);
