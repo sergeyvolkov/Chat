@@ -2,8 +2,10 @@ $(document).ready(function() {
     var socket = io(),
         username,
         $message = $('#message'),
+        $sendMessage = $('#send-message'),
         $messages = $('.messages'),
         $authModal = $('#auth-modal'),
+        $authSubmit = $('#auth-submit'),
         typing;
 
     $authModal.modal('show');
@@ -12,7 +14,7 @@ $(document).ready(function() {
     socket.emit('guest mode');
 
     // check login
-    $('#auth-submit').on('click', function() {
+    $authSubmit.on('click', function() {
         username = $('#login').val();
 
         // give role 'guest' if user choose empty string as username
@@ -49,9 +51,8 @@ $(document).ready(function() {
     });
 
     // send message
-    $('#send-message').on('click', function() {
-        var $message = $('#message'),
-            message = {};
+    $sendMessage.on('click', function() {
+        var message = {};
 
         message.content = $message.val();
         message.sender = username;
@@ -66,6 +67,18 @@ $(document).ready(function() {
     $(window).bind("unload", function() {
         if (username) {
             socket.disconnect(username);
+        }
+    });
+
+    // keypresses: if user type Ctrl + Enter on login or message input, then submit form
+    $('#login').on('keypress', function(e) {
+        if (ctrlEnterPress(e)) {
+            $authSubmit.click();
+        }
+    });
+    $message.on('keypress', function(e) {
+        if (ctrlEnterPress(e)) {
+            $sendMessage.click();
         }
     });
 
@@ -143,6 +156,11 @@ $(document).ready(function() {
             $typeDiv.appendTo($systemMessages);
         }
 
+    }
+
+    function ctrlEnterPress(event) {
+        // @todo add other browsers
+        return event.ctrlKey && event.keyCode == 10;
     }
 
 });
