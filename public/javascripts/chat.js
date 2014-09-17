@@ -34,7 +34,9 @@ $(document).ready(function() {
         $authModal.modal('hide');
     });
     $authModal.on('hidden.bs.modal', function() {
-        username = null;
+        if (!username) {
+            username = null;
+        }
     });
 
     // typing
