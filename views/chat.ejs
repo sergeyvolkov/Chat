@@ -20,22 +20,17 @@
 <div class="modal fade" id="auth-modal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span class="sr-only">Close</span></button>
-                <h4 class="modal-title">Enter your login</h4>
-            </div>
             <div class="modal-body">
                 <form class="form-inline" role="form">
                     <div class="form-group">
-                        <label class="sr-only" for="login">Password</label>
+                        <h4 class="modal-title">Enter your login</h4>
+                        <label class="sr-only" for="login">Login</label>
                         <input type="text" class="form-control" id="login" placeholder="Login" autofocus>
+                        <br>
+                        <button type="button" class="btn btn-primary" id="auth-submit">Save changes</button>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="auth-submit">Save changes</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+@import url(http://fonts.googleapis.com/css?family=Exo+2&subset=latin,cyrillic);
+.container {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.5em;
+  color: #6d929b; }
+
+.chat-container {
+  background: #f5fafa; }
+  .chat-container > div {
+    padding: 5px; }
+
+.users:not(:empty),
+.messages:not(:empty),
+.system-messages:not(:empty) {
+  border-bottom: 2px solid #acd1e9; }
+
+.system-messages .typing-message {
+  font-style: italic; }
+
+.tools #message,
+.tools #send-message {
+  height: 80px; }
+.tools #message {
+  float: left;
+  width: 75%;
+  background: #f5fafa; }
+.tools #send-message {
+  float: right;
+  width: 20%;
+  border: 1px solid #c1dad6;
+  border-radius: 6px;
+  background: #c1dad6;
+  color: #6d929b; }
+.tools::after {
+  content: '';
+  display: block;
+  clear: both; }
+
+.modal-content {
+  text-align: center; }
+  .modal-content #login {
+    text-align: center; }
+  .modal-content #auth-submit {
+    margin-top: 5px; }

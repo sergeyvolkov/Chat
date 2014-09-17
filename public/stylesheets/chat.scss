@@ -1,0 +1,84 @@
+@import url(http://fonts.googleapis.com/css?family=Exo+2&subset=latin,cyrillic);
+
+$color1: #6D929B;
+$color2: #F5FAFA;
+$color3: #ACD1E9;
+$color4: #C1DAD6;
+
+@mixin separator {
+  border-bottom: 2px solid $color3;
+}
+
+.container {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.5em;
+  color: $color1;
+}
+
+.chat-container {
+  background: $color2;
+
+  &>div {
+    padding: 5px;
+  }
+
+}
+
+.users:not(:empty),
+.messages:not(:empty),
+.system-messages:not(:empty)
+{
+  @include separator;
+}
+
+.users {
+}
+
+.messages {
+}
+
+.system-messages {
+  .typing-message {
+    font-style: italic;
+  }
+}
+
+.tools {
+  #message,
+  #send-message {
+    height: 80px;
+  }
+
+  #message {
+    float: left;
+    width: 75%;
+    background: $color2;
+  }
+
+  #send-message {
+    float: right;
+    width: 20%;
+    border: 1px solid $color4;
+    border-radius: 6px;
+    background: $color4;
+    color: $color1;
+  }
+
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+
+.modal-content {
+  text-align: center;
+
+  #login {
+    text-align: center;
+  }
+
+  #auth-submit {
+    margin-top: 5px;
+  }
+}

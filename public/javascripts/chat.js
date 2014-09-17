@@ -108,8 +108,8 @@ $(document).ready(function() {
     function updateUserList(users) {
         var content;
 
-        content = 'Online users: ' + users.authUsers.join(', ') + '<br>';
-        content += 'Aninims: ' + users.guests;
+        content = '<b>Online users:</b> ' + users.authUsers.join(', ');
+        content += ' <b>Aninims:</b> ' + users.guests;
 
         $('.users').html(content);
     }
@@ -128,8 +128,9 @@ $(document).ready(function() {
             $existMessage.remove();
         } else if (!$existMessage.length && action == 'start') {
             $typeDiv = $('<div>', {
+                class: 'typing-message',
                 'data-username': username,
-                text: username + ' is typing'
+                html: username + ' is typing <i class="fa fa-spinner fa-spin"></i>'
             });
 
             $typeDiv.appendTo($systemMessages);
