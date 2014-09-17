@@ -108,7 +108,8 @@ $(document).ready(function() {
 
     function printMessage(message) {
         var $newMessage,
-            content;
+            content,
+            messagesHeight = $messages[0].scrollHeight;
 
         content = message.sender
             + ' [' + message.date + ']' + '<br>'
@@ -117,6 +118,9 @@ $(document).ready(function() {
         $newMessage = $('<div>')
             .addClass('system')
             .html(content);
+
+        // fix for Chrome
+        $('html, body').animate({scrollTop: messagesHeight}, 'slow');
 
         $newMessage.appendTo($messages);
 
