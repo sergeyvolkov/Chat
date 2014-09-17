@@ -4,15 +4,9 @@ $(document).ready(function() {
         $message = $('#message'),
         $messages = $('.messages'),
         $authModal = $('#auth-modal'),
-        modalOptions = {},
         typing;
 
-    modalOptions = {
-        backdrop:   'static',
-        keyboard:   false,
-        show:       true
-    };
-    $authModal.modal(modalOptions);
+    $authModal.modal('show');
 
     // set un-auth user as "guest"
     socket.emit('guest mode');
@@ -20,16 +14,25 @@ $(document).ready(function() {
     // check login
     $('#auth-submit').on('click', function() {
         username = $('#login').val();
-        $authModal.modal('hide');
+
+        // give role 'guest' if user choose empty string as username
+        if (username === '') {
+            username = null;
+            return false;
+        }
 
         socket.emit('user join', username, function(err, data) {
             if (err) {
                 username = null;
-                $authModal.modal(modalOptions);
             }
 
             printMessage(data);
         });
+
+        $authModal.modal('hide');
+    });
+    $authModal.on('hidden.bs.modal', function() {
+        username = null;
     });
 
     // typing
@@ -118,6 +121,10 @@ $(document).ready(function() {
         var $systemMessages = $('.system-messages'),
             $typeDiv,
             $existMessage;
+
+        if (username == null) {
+            username = 'aninim';
+        }
 
         /**
          * if system message with same user and action already exists and action == end, then remove exists message
