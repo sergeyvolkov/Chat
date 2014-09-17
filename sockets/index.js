@@ -93,14 +93,12 @@ module.exports = function(server) {
     }, 2e3);
 
     function createMessage(options) {
-        var sender = options.sender || 'aninim',
-            currentDate = new Date(),
-            currentTime = currentDate.getHours() + ':' + currentDate.getMinutes() + ':' + currentDate.getSeconds();
+        var sender = options.sender || 'aninim';
 
         return {
             sender:     sender,
             content:    options.content,
-            date:       currentTime
+            date:       getTime()
         };
     }
 
@@ -143,5 +141,18 @@ module.exports = function(server) {
         }
 
         return false;
+    }
+
+    function getTime() {
+        var date = new Date(),
+            hours = date.getHours(),
+            minutes = date.getMinutes(),
+            seconds = date.getSeconds();
+
+        hours = (hours < 9) ? '0' + hours : hours;
+        minutes = (minutes < 9) ? '0' + minutes : minutes ;
+        seconds = (seconds < 9) ? '0' + seconds : seconds;
+
+        return hours + ':' + minutes + ':' + seconds;
     }
 };
