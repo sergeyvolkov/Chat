@@ -56,7 +56,7 @@ $(document).ready(function() {
     $sendMessage.on('click', function() {
         var message = {};
 
-        message.content = $message.val();
+        message.content = $message.html();
         message.sender = username;
 
         socket.emit('message', message, function(message) {
