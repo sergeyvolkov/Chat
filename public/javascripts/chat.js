@@ -62,7 +62,7 @@ $(document).ready(function() {
         socket.emit('message', message, function(message) {
             printMessage(message);
         });
-        $message.val('');
+        $message.html('');
     });
 
     // close page
@@ -126,6 +126,8 @@ $(document).ready(function() {
             messageTime = moment(message.date).format('HH:mm:ss'),
             messageTimeAgo = moment().from(messageTime);
 
+        message.content = emojify.replace(message.content);
+
         content = message.sender
             + ' [' + messageTime + ']' + ' (<span class="moment-time" data-time="' + message.date
             + '" >' + messageTimeAgo + '</span>)' + '<br>'
@@ -184,5 +186,18 @@ $(document).ready(function() {
         // @todo add other browsers
         return event.ctrlKey && event.keyCode == 10;
     }
+
+
+    // setup emojify
+    emojify.setConfig({
+        img_dir          : 'vendor/bower_components/emojify/images/emoji',  // Directory for emoji images
+        ignored_tags     : {                // Ignore the following tags
+            'SCRIPT'  : 1,
+            'TEXTAREA': 1,
+            'A'       : 1,
+            'PRE'     : 1,
+            'CODE'    : 1
+        }
+    });
 
 });

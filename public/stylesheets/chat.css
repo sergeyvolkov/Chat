@@ -50,3 +50,8 @@
     text-align: center; }
   .modal-content button {
     margin-top: 5px; }
+
+.emoji {
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: top; }
