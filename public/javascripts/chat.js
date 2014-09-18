@@ -84,6 +84,19 @@ $(document).ready(function() {
         }
     });
 
+    // update timeago
+    setInterval(function() {
+        var $datetimes = $('.moment-time');
+
+        $.each($datetimes, function() {
+            var $self = $(this),
+                time = $self.data('time'),
+                timeAgoText = moment().from(time);
+
+            $self.html(timeAgoText);
+        });
+    }, 2e3);
+
     // websockets behaviour
     socket
         .on('user join', function(data) {
@@ -109,10 +122,13 @@ $(document).ready(function() {
     function printMessage(message) {
         var $newMessage,
             content,
-            messagesHeight = $messages[0].scrollHeight;
+            messagesHeight = $messages[0].scrollHeight,
+            messageTime = moment(message.date).format('HH:mm:ss'),
+            messageTimeAgo = moment().from(messageTime);
 
         content = message.sender
-            + ' [' + message.date + ']' + '<br>'
+            + ' [' + messageTime + ']' + ' (<span class="moment-time" data-time="' + message.date
+            + '" >' + messageTimeAgo + '</span>)' + '<br>'
             + message.content + '<br><br>';
 
         $newMessage = $('<div>')

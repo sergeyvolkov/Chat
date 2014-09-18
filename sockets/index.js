@@ -98,7 +98,7 @@ module.exports = function(server) {
         return {
             sender:     sender,
             content:    options.content,
-            date:       getTime()
+            date:       new Date()
         };
     }
 
