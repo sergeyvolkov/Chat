@@ -6,7 +6,8 @@ $(document).ready(function() {
         $messages = $('.messages'),
         $authModal = $('#auth-modal'),
         $authSubmit = $('#auth-submit'),
-        typing;
+        typing,
+        emojiContent;
 
     $authModal.modal('show');
 
@@ -199,5 +200,21 @@ $(document).ready(function() {
             'CODE'    : 1
         }
     });
+    emojiContent = ':smile: :blush: :expressionless: :unamused:';
+    $('.smiles')
+        .popover({
+            html: true,
+            trigger: 'click',
+            placement: 'top',
+            content: emojify.replace(emojiContent)
+        })
+        .on('shown.bs.popover', function() {
+            var $popover = $(this);
+            $('.smiles + .popover img').on('click', function() {
+                var messageContent = $message.html();
+                $message.html(messageContent + ' ' + $(this).attr('title'));
+                $popover.popover('hide');
+            });
+        });
 
 });
