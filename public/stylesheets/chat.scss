@@ -64,6 +64,16 @@ $color4: #C1DAD6;
     color: $color1;
   }
 
+  .additional {
+    float: left;
+    width: 5%;
+    text-align: center;
+    i:hover {
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+  }
+
   &::after {
     content: '';
     display: block;

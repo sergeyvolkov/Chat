@@ -31,6 +31,13 @@
   border-radius: 6px;
   background: #c1dad6;
   color: #6d929b; }
+.tools .additional {
+  float: left;
+  width: 5%;
+  text-align: center; }
+  .tools .additional i:hover {
+    cursor: pointer;
+    font-size: 1.2em; }
 .tools::after {
   content: '';
   display: block;
