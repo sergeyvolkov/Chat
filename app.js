@@ -8,6 +8,7 @@ var express = require('express'),
     passport = require('passport'),
     flash = require('connect-flash'),
     ejs = require('ejs-locals'),
+    socketIOFileUpload = require('socketio-file-upload'),
     app;
 
 app = express();
@@ -25,6 +26,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(socketIOFileUpload.router);
 
 app.use(session({
     secret: config.get('session:secret'),

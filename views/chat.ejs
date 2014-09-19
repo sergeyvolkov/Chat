@@ -5,6 +5,7 @@
 <% script('/vendor/bower_components/socket.io-client/socket.io.js') %>
 <% script('/vendor/bower_components/moment/moment.js') %>
 <% script('/vendor/bower_components/emojify/emojify.js') %>
+<% script('/vendor/bower_components/socketio-file-upload/client.js') %>
 <% stylesheet('/vendor/bower_components/emojify/emojify.css') %>
 <% script('//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js') %>
 <% script('/javascripts/chat.js') %>
@@ -18,6 +19,7 @@
         <div class="additional">
             <i class="fa fa-smile-o smiles"></i>
             <i class="fa fa-paperclip"></i>
+            <input type="file" id="file-upload" multiple>
         </div>
         <button id="send-message" class="btn btn-primary btn-lg">Send</button>
     </div>

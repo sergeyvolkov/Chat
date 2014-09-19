@@ -7,7 +7,8 @@ $(document).ready(function() {
         $authModal = $('#auth-modal'),
         $authSubmit = $('#auth-submit'),
         typing,
-        emojiContent;
+        emojiContent,
+        siofu = new SocketIOFileUpload(socket);
 
     $authModal.modal('show');
 
@@ -217,4 +218,9 @@ $(document).ready(function() {
             });
         });
 
+    // setup file uploading
+    siofu.listenOnInput(document.getElementById('file-upload'));
+    siofu.addEventListener('complete', function(e) {
+        console.log(e);
+    }, false);
 });

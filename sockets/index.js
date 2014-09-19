@@ -1,5 +1,6 @@
 module.exports = function(server) {
     var io = require('socket.io').listen(server),
+        socketIOFileUpload = require('socketio-file-upload'),
         users = [],
         usersList = {
             authUsers:  [],
@@ -14,6 +15,18 @@ module.exports = function(server) {
     }, 10e3);
 
     io.on('connection', function(socket) {
+        var uploader = new socketIOFileUpload();
+        uploader.dir = 'public/uploads';
+        uploader.listen(socket);
+
+        uploader.on('saved', function(event) {
+            console.log(event);
+        });
+
+        uploader.on('error', function(event) {
+            console.log(event);
+        });
+
         socket.on('guest mode', function() {
             ++usersList.guests;
         });
