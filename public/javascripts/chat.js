@@ -128,7 +128,15 @@ $(document).ready(function() {
             messageTime = moment(message.date).format('HH:mm:ss'),
             messageTimeAgo = moment().from(messageTime);
 
-        message.content = emojify.replace(message.content);
+        switch (message.contentType) {
+            case 'image':
+                message.content = '<img class="attachment-image" src="' + message.content + '">';
+                break;
+            case 'text':
+            default:
+                message.content = emojify.replace(message.content);
+                break;
+        }
 
         content = message.sender
             + ' [' + messageTime + ']' + ' (<span class="moment-time" data-time="' + message.date

@@ -20,11 +20,18 @@ module.exports = function(server) {
         uploader.listen(socket);
 
         uploader.on('saved', function(event) {
-            console.log(event);
+            var fileInfo = event.file,
+                message;
+
+            message = createMessage({
+                content:        fileInfo.pathName.replace('public', ''),
+                contentType:    'image'
+            });
+
+            socket.broadcast.emit('message', message);
         });
 
         uploader.on('error', function(event) {
-            console.log(event);
         });
 
         socket.on('guest mode', function() {
@@ -106,12 +113,14 @@ module.exports = function(server) {
     }, 2e3);
 
     function createMessage(options) {
-        var sender = options.sender || 'aninim';
+        var sender = options.sender || 'aninim',
+            contentType = options.contentType || 'text';
 
         return {
-            sender:     sender,
-            content:    options.content,
-            date:       new Date()
+            sender:         sender,
+            content:        options.content,
+            contentType:    contentType,
+            date:           new Date()
         };
     }
 

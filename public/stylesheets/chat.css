@@ -14,6 +14,9 @@
 .system-messages:not(:empty) {
   border-bottom: 2px solid #acd1e9; }
 
+.messages .attachment-image {
+  width: 300px; }
+
 .system-messages .typing-message {
   font-style: italic; }
 
