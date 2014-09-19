@@ -76,6 +76,10 @@ $color4: #C1DAD6;
       cursor: pointer;
       font-size: 1.2em;
     }
+
+    #file-upload {
+      display: none;
+    }
   }
 
   &::after {
