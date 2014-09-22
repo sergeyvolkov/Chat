@@ -20,15 +20,17 @@ module.exports = function(server) {
         uploader.listen(socket);
 
         uploader.on('saved', function(event) {
-            var fileInfo = event.file,
+            var user = findBy('socket', socket).username || 'aninim',
+                fileInfo = event.file,
                 message;
 
             message = createMessage({
+                sender:         user,
                 content:        fileInfo.pathName.replace('public', ''),
                 contentType:    'image'
             });
 
-            socket.broadcast.emit('message', message);
+            io.sockets.emit('message', message);
         });
 
         uploader.on('error', function(event) {
