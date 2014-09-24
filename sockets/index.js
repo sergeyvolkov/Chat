@@ -3,39 +3,17 @@ module.exports = function(server) {
         socketIOFileUpload = require('socketio-file-upload'),
         users = [];
 
+	// allowed for all hosts and ports
     io.set('origins', '*:*');
 
-    setInterval(function() {
-		console.log(visitorsInfo());
-	}, 10e3);
-
     io.on('connection', function(socket) {
+		var uploader;
+
 		/**
 		 * when someone is connected then updated visitors info for all clients
 		 * also this info updated when some user finished sign in or disconnect
 		 */
 		io.sockets.emit('users list', visitorsInfo());
-
-        var uploader = new socketIOFileUpload();
-        uploader.dir = 'public/uploads';
-        uploader.listen(socket);
-
-        uploader.on('saved', function(event) {
-            var user = findBy('socket', socket).username || 'aninim',
-                fileInfo = event.file,
-                message;
-
-            message = createMessage({
-                sender:         user,
-                content:        fileInfo.pathName.replace('public', ''),
-                contentType:    fileInfo.type.split('/')[0]
-            });
-
-            io.sockets.emit('message', message);
-        });
-
-        uploader.on('error', function(event) {
-        });
 
         socket.on('user join', function(username, callback) {
             var err = null,
@@ -96,10 +74,33 @@ module.exports = function(server) {
                 socket.broadcast.emit('user left', message);
 
                 removeUser(user.username);
-
             }
-
         });
+
+		/**
+		 * Upload settings
+		 * @type {SocketIOFileUploadServer}
+		 */
+		uploader = new socketIOFileUpload();
+		uploader.dir = 'public/uploads';
+		uploader.listen(socket);
+
+		uploader.on('saved', function(event) {
+			var user = findBy('socket', socket).username || 'aninim',
+				fileInfo = event.file,
+				message;
+
+			message = createMessage({
+				sender:         user,
+				content:        fileInfo.pathName.replace('public', ''),
+				contentType:    fileInfo.type.split('/')[0]
+			});
+
+			io.sockets.emit('message', message);
+		});
+
+		uploader.on('error', function(event) {
+		});
 
     });
 
