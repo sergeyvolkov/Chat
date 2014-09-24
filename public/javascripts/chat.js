@@ -12,9 +12,6 @@ $(document).ready(function() {
 
     $authModal.modal('show');
 
-    // set un-auth user as "guest"
-    socket.emit('guest mode');
-
     // check login
     $authSubmit.on('click', function() {
         username = $('#login').val();
@@ -159,12 +156,9 @@ $(document).ready(function() {
     }
 
     function updateUserList(users) {
-        var content;
-
-        content = '<b>Online users:</b> ' + users.authUsers.join(', ');
-        content += ' <b>Aninims:</b> ' + users.guests;
-
-        $('.users').html(content);
+		$('.total-count').text(users.total);
+		$('.auth-count').text(users.users);
+		$('.guests-count').text(users.guests);
     }
 
     function typeMessage(action, username) {

@@ -1,20 +1,21 @@
 module.exports = function(server) {
     var io = require('socket.io').listen(server),
         socketIOFileUpload = require('socketio-file-upload'),
-        users = [],
-        usersList = {
-            authUsers:  [],
-            guests:     0
-        };
+        users = [];
 
     io.set('origins', '*:*');
 
     setInterval(function() {
-        console.log('Usernames: ' + usersList.authUsers);
-        console.log('Guests: ' + usersList.guests);
-    }, 10e3);
+		console.log(visitorsInfo());
+	}, 10e3);
 
     io.on('connection', function(socket) {
+		/**
+		 * when someone is connected then updated visitors info for all clients
+		 * also this info updated when some user finished sign in or disconnect
+		 */
+		io.sockets.emit('users list', visitorsInfo());
+
         var uploader = new socketIOFileUpload();
         uploader.dir = 'public/uploads';
         uploader.listen(socket);
@@ -36,10 +37,6 @@ module.exports = function(server) {
         uploader.on('error', function(event) {
         });
 
-        socket.on('guest mode', function() {
-            ++usersList.guests;
-        });
-
         socket.on('user join', function(username, callback) {
             var err = null,
                 options = {},
@@ -48,6 +45,8 @@ module.exports = function(server) {
             options.sender = 'System';
             if (!findBy('username', username)) {
                 addUser(username, socket);
+				// one guest "left" chat, one auth user "join"
+				io.sockets.emit('users list', visitorsInfo());
 
                 // create broadcast message
                 options.content = username + ' has been joined now';
@@ -56,8 +55,6 @@ module.exports = function(server) {
 
                 options.content = 'You have been joined to chat (username: ' + username + ')';
 
-                --usersList.guests;
-                usersList.guests = (usersList.guests < 0) ? 0 : usersList.guests;
             } else {
                 err = true;
                 options.content = 'User ' + username + ' already exists';
@@ -66,7 +63,6 @@ module.exports = function(server) {
             message = createMessage(options);
             callback(err, message);
 
-            io.sockets.emit('users list', usersList);
         });
 
         socket.on('message', function(data, callback) {
@@ -89,6 +85,8 @@ module.exports = function(server) {
                 options = {},
                 message;
 
+			io.sockets.emit('users list', visitorsInfo());
+
             if (user) {
                 options.sender = 'System';
                 options.content = 'User ' + user.username + ' left chat';
@@ -99,20 +97,11 @@ module.exports = function(server) {
 
                 removeUser(user.username);
 
-            } else {
-                --usersList.guests;
-                usersList.guests = (usersList.guests < 0) ? 0 : usersList.guests;
             }
-
-            io.sockets.emit('users list', usersList);
 
         });
 
     });
-
-    setInterval(function() {
-        io.sockets.emit('users list', usersList);
-    }, 2e3);
 
     function createMessage(options) {
         var sender = options.sender || 'aninim',
@@ -148,8 +137,6 @@ module.exports = function(server) {
             username: username,
             socket: socket
         });
-
-        usersList.authUsers.push(username);
     }
 
     function removeUser(username) {
@@ -159,7 +146,6 @@ module.exports = function(server) {
         for (i = 0; i < length; i++) {
             if (users[i].username == username) {
                 users.splice(i, 1);
-                usersList.authUsers.splice(i, 1);
                 return true;
             }
         }
@@ -167,16 +153,26 @@ module.exports = function(server) {
         return false;
     }
 
-    function getTime() {
-        var date = new Date(),
-            hours = date.getHours(),
-            minutes = date.getMinutes(),
-            seconds = date.getSeconds();
+	function visitorsInfo() {
+		var totalVisitorsCount,
+			authUsersCount,
+			guestsCount,
+			usernames;
 
-        hours = (hours < 9) ? '0' + hours : hours;
-        minutes = (minutes < 9) ? '0' + minutes : minutes ;
-        seconds = (seconds < 9) ? '0' + seconds : seconds;
+		// get all usernames
+		usernames = users.map(function(user) {
+			return user.usernames;
+		});
 
-        return hours + ':' + minutes + ':' + seconds;
-    }
+		totalVisitorsCount = io.sockets.sockets.length;
+		authUsersCount = users.length;
+		guestsCount = totalVisitorsCount - authUsersCount;
+
+		return {
+			total:	totalVisitorsCount,
+			users:	authUsersCount,
+			guests:	guestsCount
+		};
+	}
+
 };
