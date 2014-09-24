@@ -155,11 +155,27 @@ $(document).ready(function() {
         return true;
     }
 
+	/**
+	 * Update users list for format:
+	 * Total: M
+	 * Auth users: N (user1, user2, ..., userN)
+	 * Guests: {M - N}
+	 *
+	 * @param {object} users
+	 */
     function updateUserList(users) {
+		var usersContent;
+
 		$('.total-count').text(users.total);
-		$('.auth-count').text(users.users);
 		$('.guests-count').text(users.guests);
-    }
+
+		usersContent = users.users;
+		if (users.usernames.length) {
+			usersContent += ' (' + users.usernames.join(', ') + ')';
+		}
+
+		$('.auth-count').text(usersContent);
+	}
 
     function typeMessage(action, username) {
         var $systemMessages = $('.system-messages'),

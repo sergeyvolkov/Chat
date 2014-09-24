@@ -161,7 +161,7 @@ module.exports = function(server) {
 
 		// get all usernames
 		usernames = users.map(function(user) {
-			return user.usernames;
+			return user.username;
 		});
 
 		totalVisitorsCount = io.sockets.sockets.length;
@@ -169,9 +169,10 @@ module.exports = function(server) {
 		guestsCount = totalVisitorsCount - authUsersCount;
 
 		return {
-			total:	totalVisitorsCount,
-			users:	authUsersCount,
-			guests:	guestsCount
+			total:		totalVisitorsCount,
+			users:		authUsersCount,
+			usernames:	usernames,
+			guests:		guestsCount
 		};
 	}
 
