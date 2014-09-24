@@ -27,7 +27,7 @@ module.exports = function(server) {
             message = createMessage({
                 sender:         user,
                 content:        fileInfo.pathName.replace('public', ''),
-                contentType:    'image'
+                contentType:    fileInfo.type.split('/')[0]
             });
 
             io.sockets.emit('message', message);

@@ -132,6 +132,9 @@ $(document).ready(function() {
             case 'image':
                 message.content = '<img class="attachment-image" src="' + message.content + '">';
                 break;
+			case 'audio':
+				message.content = '<audio src="' + message.content + '" controls></audio>';
+				break;
             case 'text':
             default:
                 message.content = emojify.replace(message.content);
