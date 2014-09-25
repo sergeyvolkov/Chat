@@ -223,7 +223,7 @@ $(document).ready(function() {
 		// define all templates
 		templates = {
 			image:	'<img src="<%= src %>" class="attachment-image" >',
-			audio:	'<audio src=" <%= src %>" controls',
+			audio:	'<audio src=" <%= src %>" controls></audio>',
 			text:   '<% src %>'
 		};
 
