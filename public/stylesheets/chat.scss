@@ -57,6 +57,10 @@ $color4: #C1DAD6;
     width: 75%;
     background: $color2;
     border: 2px solid $color1;
+
+    .attachment-image {
+      width: 120px;
+    }
   }
 
   #send-message {

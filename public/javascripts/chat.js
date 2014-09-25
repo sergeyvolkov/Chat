@@ -103,19 +103,6 @@ $(document).ready(function() {
             messageTime = moment(message.date).format('HH:mm:ss'),
             messageTimeAgo = moment().from(messageTime);
 
-        switch (message.contentType) {
-            case 'image':
-                message.content = '<img class="attachment-image" src="' + message.content + '">';
-                break;
-			case 'audio':
-				message.content = '<audio src="' + message.content + '" controls></audio>';
-				break;
-            case 'text':
-            default:
-                message.content = emojify.replace(message.content);
-                break;
-        }
-
         content = message.sender
             + ' [' + messageTime + ']' + ' (<span class="moment-time" data-time="' + message.date
             + '" >' + messageTimeAgo + '</span>)' + '<br>'
@@ -188,6 +175,11 @@ $(document).ready(function() {
         return event.ctrlKey && event.keyCode == 10;
     }
 
+	function appendTextToMessage(text) {
+		var content = $message.html();
+		$message.html(content + ' ' + text);
+	}
+
 
     // setup emojify
     emojify.setConfig({
@@ -219,7 +211,28 @@ $(document).ready(function() {
 
     // setup file uploading
     siofu.listenOnInput(document.getElementById('file-upload'));
-    siofu.addEventListener('complete', function(e) {
-        console.log(e);
+	// add meta data for server
+    siofu.addEventListener('complete', function(event) {
+        var mimeType = event.file.type.split('/'),
+			templates,
+			currentTemplate,
+			content;
+
+		// add attachment to message
+
+		// define all templates
+		templates = {
+			image:	'<img src="<%= src %>" class="attachment-image" >',
+			audio:	'<audio src=" <%= src %>" controls',
+			text:   '<% src %>'
+		};
+
+		mimeType = mimeType[0];
+
+		// check if mime type's template exists, use it
+		// otherwise use plain text
+		currentTemplate = (templates[mimeType]) ? templates[mimeType] : templates.text;
+		content = _.template(currentTemplate, {'src': event.detail.filePath});
+		appendTextToMessage(content);
     }, false);
 });

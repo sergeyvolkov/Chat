@@ -28,6 +28,8 @@
   width: 75%;
   background: #f5fafa;
   border: 2px solid #6d929b; }
+  .tools #message .attachment-image {
+    width: 120px; }
 .tools #send-message {
   float: right;
   width: 20%;

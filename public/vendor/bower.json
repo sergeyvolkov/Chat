@@ -21,6 +21,7 @@
     "socket.io-client": "~1.0.6",
     "moment": "~2.8.3",
     "emojify": "~0.9.4",
-    "socketio-file-upload": "*"
+    "socketio-file-upload": "*",
+    "lodash": "~2.4.1"
   }
 }

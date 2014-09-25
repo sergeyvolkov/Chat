@@ -85,33 +85,20 @@ module.exports = function(server) {
 		uploader.dir = 'public/uploads';
 		uploader.listen(socket);
 
+		// send public file path to client
 		uploader.on('saved', function(event) {
-			var user = findBy('socket', socket).username || 'aninim',
-				fileInfo = event.file,
-				message;
-
-			message = createMessage({
-				sender:         user,
-				content:        fileInfo.pathName.replace('public', ''),
-				contentType:    fileInfo.type.split('/')[0]
-			});
-
-			io.sockets.emit('message', message);
-		});
-
-		uploader.on('error', function(event) {
+			var file = event.file;
+			file.clientDetail.filePath = file.pathName.replace('public', '');
 		});
 
     });
 
     function createMessage(options) {
-        var sender = options.sender || 'aninim',
-            contentType = options.contentType || 'text';
+        var sender = options.sender || 'aninim';
 
         return {
             sender:         sender,
             content:        options.content,
-            contentType:    contentType,
             date:           new Date()
         };
     }
