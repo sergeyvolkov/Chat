@@ -1,7 +1,8 @@
 module.exports = function(server) {
     var io = require('socket.io').listen(server),
         socketIOFileUpload = require('socketio-file-upload'),
-        users = [];
+        users = [],
+		usersIndex = 1;
 
 	// allowed for all hosts and ports
     io.set('origins', '*:*');
@@ -15,31 +16,30 @@ module.exports = function(server) {
 		 */
 		io.sockets.emit('users list', visitorsInfo());
 
-        socket.on('user join', function(username, callback) {
-            var err = null,
-                options = {},
-                message;
+		/**
+		 * New guests automatically get username like 'username-N'
+		 */
+        socket.on('user join', function(callback) {
+			var username = 'username-' + ++usersIndex,
+				message,
+				options = {};
 
             options.sender = 'System';
-            if (!findBy('username', username)) {
-                addUser(username, socket);
-				// one guest "left" chat, one auth user "join"
-				io.sockets.emit('users list', visitorsInfo());
 
-                // create broadcast message
-                options.content = username + ' has been joined now';
-                message = createMessage(options);
-                socket.broadcast.emit('user join', message);
+			// one guest "left" chat, one auth user "join"
+			addUser(username, socket);
+			io.sockets.emit('users list', visitorsInfo());
 
-                options.content = 'You have been joined to chat (username: ' + username + ')';
+			// create broadcast message for other
+			options.content = username + ' has been joined now';
+			message = createMessage(options);
+			socket.broadcast.emit('user join', message);
 
-            } else {
-                err = true;
-                options.content = 'User ' + username + ' already exists';
-            }
+			// create message for user
+			options.content = 'You have been joined to chat (username: ' + username + ')';
 
             message = createMessage(options);
-            callback(err, message);
+            callback && callback(message, username);
 
         });
 

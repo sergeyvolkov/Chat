@@ -4,39 +4,17 @@ $(document).ready(function() {
         $message = $('#message'),
         $sendMessage = $('#send-message'),
         $messages = $('.messages'),
-        $authModal = $('#auth-modal'),
-        $authSubmit = $('#auth-submit'),
         typing,
         emojiContent,
         siofu = new SocketIOFileUpload(socket);
 
-    $authModal.modal('show');
-
-    // check login
-    $authSubmit.on('click', function() {
-        username = $('#login').val();
-
-        // give role 'guest' if user choose empty string as username
-        if (username === '') {
-            username = null;
-            return false;
-        }
-
-        socket.emit('user join', username, function(err, data) {
-            if (err) {
-                username = null;
-            }
-
-            printMessage(data);
-        });
-
-        $authModal.modal('hide');
-    });
-    $authModal.on('hidden.bs.modal', function() {
-        if (!username) {
-            username = null;
-        }
-    });
+	/**
+	 * Temporary get random name. First step for passport.js :)
+	 */
+	socket.emit('user join', function(message, currentUsername) {
+		username = currentUsername;
+		printMessage(message);
+	});
 
     // typing
     $message.on('input', function() {
