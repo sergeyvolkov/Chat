@@ -6,7 +6,21 @@ $(document).ready(function() {
         $messages = $('.messages'),
         typing,
         emojiContent,
-        siofu = new SocketIOFileUpload(socket);
+        siofu = new SocketIOFileUpload(socket),
+		templates;
+
+	// define all templates
+	templates = {
+		message:		{
+			time:		'[<%= time %>] (<span class="moment-time" data-time="<%= timeStamp %>"><%= timeAgo %></span>)',
+			message:	'<%= author %> <%= time %><br> <%= content %><br>'
+		},
+		attachments:	{
+			image:	'<img src="<%= src %>" class="attachment-image" >',
+			audio:	'<audio src=" <%= src %>" controls></audio>',
+			text:   '<% src %>'
+		}
+	};
 
 	/**
 	 * Temporary get random name. First step for passport.js :)
@@ -99,17 +113,21 @@ $(document).ready(function() {
     function printMessage(message) {
         var $newMessage,
             content,
-            messagesHeight = $messages[0].scrollHeight,
-            messageTime = moment(message.date).format('HH:mm:ss'),
-            messageTimeAgo = moment().from(messageTime);
+			contentTime,
+            messagesHeight = $messages[0].scrollHeight;
 
-        content = message.sender
-            + ' [' + messageTime + ']' + ' (<span class="moment-time" data-time="' + message.date
-            + '" >' + messageTimeAgo + '</span>)' + '<br>'
-            + message.content + '<br><br>';
+		contentTime = _.template(templates.message.time, {
+			time:		moment(message.date).format('HH:mm:ss'),
+			timeStamp:	message.date,
+			timeAgo:	moment().from(moment(message.date).format('HH:mm:ss'))
+		});
+		content = _.template(templates.message.message, {
+			author:		message.sender,
+			time:		contentTime,
+			content:	message.content
+		});
 
         $newMessage = $('<div>')
-            .addClass('system')
             .html(content);
 
         // fix for Chrome
@@ -228,24 +246,18 @@ $(document).ready(function() {
 	// add meta data for server
     siofu.addEventListener('complete', function(event) {
         var mimeType = event.file.type.split('/'),
-			templates,
 			currentTemplate,
 			content;
 
 		// add attachment to message
 
-		// define all templates
-		templates = {
-			image:	'<img src="<%= src %>" class="attachment-image" >',
-			audio:	'<audio src=" <%= src %>" controls></audio>',
-			text:   '<% src %>'
-		};
-
 		mimeType = mimeType[0];
 
 		// check if mime type's template exists, use it
 		// otherwise use plain text
-		currentTemplate = (templates[mimeType]) ? templates[mimeType] : templates.text;
+		currentTemplate = (templates.attachments[mimeType])
+			? templates.attachments[mimeType]
+			: templates.attachments.text;
 		content = _.template(currentTemplate, {'src': event.detail.filePath});
 		appendTextToMessage(content);
     }, false);
