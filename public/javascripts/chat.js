@@ -203,11 +203,25 @@ $(document).ready(function() {
         .on('shown.bs.popover', function() {
             var $popover = $(this);
             $('.smiles + .popover img').on('click', function() {
-                var messageContent = $message.html();
-                $message.html(messageContent + ' ' + $(this).attr('title'));
+				appendTextToMessage($(this).prop('outerHTML'));
                 $popover.popover('hide');
             });
         });
+	// close popover on outside click
+	$('body').on('click', function (e) {
+		if ($(e.target).hasClass('smiles')) {
+			return true;
+		}
+		$('div.popover').each(function () {
+			//the 'is' for buttons that trigger popups
+			//the 'has' for icons within a button that triggers a popup
+			if (!$(this).is(e.target) && $(this).has(e.target).length === 0
+				&& $('.popover').has(e.target).length === 0
+			) {
+				$(this).popover('hide');
+			}
+		});
+	});
 
     // setup file uploading
     siofu.listenOnInput(document.getElementById('file-upload'));
