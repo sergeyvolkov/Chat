@@ -108,7 +108,10 @@ $(document).ready(function() {
         })
         .on('users list', function(data) {
             updateUserList(data);
-        });
+        })
+		.on('disconnect', function() {
+			// @todo add behaviour
+		});
 
     function printMessage(message) {
         var $newMessage,
