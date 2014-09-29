@@ -4,16 +4,14 @@ module.exports = function(app, passport) {
     });
 
     app.get('/login', function(req, res) {
-        return true;
         res.render('login', { message: req.flash('loginMessage') });
     });
-//    app.post('/login',
-//        passport.authenticate('local-login', {
-//            successRedirect :   '/chat',
-//            failureRedirect :   '/login',
-//            failureFlash    :   true
-//        })
-//    );
+    app.post('/login',
+        passport.authenticate('local', {failureFlash: false}),
+        function(req, res) {
+            res.redirect('/chat');
+        }
+    );
 
     app.get('/logout', function(req, res) {
         return true;
@@ -22,7 +20,6 @@ module.exports = function(app, passport) {
     });
 
     app.get('/sign-up', function(req, res) {
-        return true;
         res.render('../views/signup', { message: req.flash('signupMessage') });
     });
     app.post('/sign-up', passport.authenticate('local-signup', {
@@ -32,9 +29,10 @@ module.exports = function(app, passport) {
     }));
 
     app.get('/chat', function(req, res) {
-//        if (!req.user) {
-//            res.redirect('/login');
-//        }
+        if (!req.user) {
+            res.redirect('/login');
+        }
+        console.log(req.user);
 
         res.render('chat', {title: "Chat room"});
     });
