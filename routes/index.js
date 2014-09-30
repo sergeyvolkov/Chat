@@ -14,7 +14,6 @@ module.exports = function(app, passport) {
     );
 
     app.get('/logout', function(req, res) {
-        return true;
         req.logout();
         res.redirect('/');
     });
@@ -32,7 +31,6 @@ module.exports = function(app, passport) {
         if (!req.user) {
             res.redirect('/login');
         }
-        console.log(req.user);
 
         res.render('chat', {title: "Chat room"});
     });
