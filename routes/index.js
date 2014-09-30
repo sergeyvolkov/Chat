@@ -16,6 +16,7 @@ module.exports = function(app, passport) {
     app.get('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
+        app.locals.user = null;
     });
 
     app.get('/sign-up', function(req, res) {
@@ -28,7 +29,9 @@ module.exports = function(app, passport) {
     }));
 
     app.get('/chat', function(req, res) {
-        if (!req.user) {
+        if (req.user) {
+            app.locals.user = req.user;
+        } else {
             res.redirect('/login');
         }
 
