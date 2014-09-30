@@ -1,6 +1,7 @@
-module.exports = function(server) {
+module.exports = function(server, app) {
     var io = require('socket.io').listen(server),
         socketIOFileUpload = require('socketio-file-upload'),
+        username,
         users = [],
 		usersIndex = 1;
 
@@ -9,6 +10,8 @@ module.exports = function(server) {
 
     io.on('connection', function(socket) {
 		var uploader;
+
+        username = app.locals.user.username;
 
 		/**
 		 * when someone is connected then updated visitors info for all clients
@@ -20,8 +23,7 @@ module.exports = function(server) {
 		 * New guests automatically get username like 'username-N'
 		 */
         socket.on('user join', function(callback) {
-			var username = 'username-' + ++usersIndex,
-				message,
+            var message,
 				options = {};
 
             options.sender = 'System';

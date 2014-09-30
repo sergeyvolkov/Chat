@@ -11,4 +11,4 @@ server = app.listen(app.get('port'), function() {
     console.log('Express server listening on port ' + server.address().port);
 });
 
-require('../sockets')(server);
+require('../sockets')(server, app);
