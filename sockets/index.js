@@ -1,6 +1,8 @@
 module.exports = function(server, app) {
     var io = require('socket.io').listen(server),
+        fs = require('fs'),
         socketIOFileUpload = require('socketio-file-upload'),
+        htmlToText = require('html-to-text'),
         username,
         users = [],
 		usersIndex = 1;
@@ -58,6 +60,26 @@ module.exports = function(server, app) {
 
         socket.on('end typing', function(data) {
             socket.broadcast.emit('end typing', data);
+        });
+
+        socket.on('download history request', function(data) {
+            var filename = ['history-', username, '-', Date.now(), '.txt'].join(''),
+                filepath = './public/uploads/' + filename,
+                message;
+
+            data = htmlToText.fromString(data);
+            fs.writeFile(filepath, data, function(err) {
+                if (err) {
+                    throw err;
+                }
+
+                message = createMessage({
+                    sender:     'System',
+                    content:    'Your download link: <a href="' + filepath.replace('./public', '') + '">' +
+                                '<i class="fa fa-external-link-square"></i> Link</a>'
+                });
+                socket.emit('download history response', message);
+            });
         });
 
         socket.on('disconnect', function() {

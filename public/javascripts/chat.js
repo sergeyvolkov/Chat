@@ -88,6 +88,11 @@ $(document).ready(function() {
         });
     }, 2e3);
 
+    // get download history link
+    $('.fa.fa-download').on('click', function() {
+        socket.emit('download history request', $messages.html());
+    });
+
     // websockets behaviour
     socket
         .on('user join', function(data) {
@@ -108,6 +113,9 @@ $(document).ready(function() {
         })
         .on('users list', function(data) {
             updateUserList(data);
+        })
+        .on('download history response', function(data) {
+            printMessage(data);
         })
 		.on('disconnect', function() {
 			// @todo add behaviour
