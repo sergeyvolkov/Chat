@@ -75,8 +75,8 @@ module.exports = function(server, app) {
 
                 message = createMessage({
                     sender:     'System',
-                    content:    'Your download link: <a href="' + filepath.replace('./public', '') + '">' +
-                                '<i class="fa fa-external-link-square"></i> Link</a>'
+                    content:    'Your download link: <a href="' + filepath.replace('./public', '') + '" target="_blank">'
+                                + '<i class="fa fa-external-link-square"></i> Link</a>'
                 });
                 socket.emit('download history response', message);
             });
