@@ -14,8 +14,18 @@
 .system-messages:not(:empty) {
   border-bottom: 2px solid #acd1e9; }
 
+.users .users-mention {
+  border-bottom: 1px dashed #6d929b; }
+  .users .users-mention:before {
+    content: "@"; }
+  .users .users-mention:hover {
+    border-bottom: 1px solid #6d929b;
+    cursor: pointer; }
+
 .messages .attachment-image {
   width: 300px; }
+.messages .for-me-messages {
+  background: #d3e9e9; }
 
 .system-messages .typing-message {
   font-style: italic; }

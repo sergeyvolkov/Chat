@@ -32,11 +32,27 @@ $color4: #C1DAD6;
 }
 
 .users {
+  .users-mention {
+    border-bottom: 1px dashed $color1;
+
+    &:before {
+      content: "@";
+    }
+
+    &:hover {
+      border-bottom: 1px solid $color1;
+      cursor: pointer;
+    }
+  }
 }
 
 .messages {
   .attachment-image {
     width: 300px;
+  }
+
+  .for-me-messages {
+    background: darken($color2, 10%);
   }
 }
 

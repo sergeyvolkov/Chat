@@ -1,6 +1,7 @@
 $(document).ready(function() {
     var socket = io(),
         username,
+        $body = $('body'),
         $message = $('#message'),
         $sendMessage = $('#send-message'),
         $messages = $('.messages'),
@@ -19,7 +20,12 @@ $(document).ready(function() {
 			image:	'<img src="<%= src %>" class="attachment-image" >',
 			audio:	'<audio src=" <%= src %>" controls></audio>',
 			text:   '<% src %>'
-		}
+		},
+        users:          {
+            usernames:  '<%= usersCount %> (<%= usernames %>)',
+            username:   '<span title="Mention this user" class="users-mention" data-username="<%= username %>">' +
+                        '<%= username %></span>'
+        }
 	};
 
 	/**
@@ -93,6 +99,13 @@ $(document).ready(function() {
         socket.emit('download history request', $messages.html());
     });
 
+    // user's mention
+    $body.on('click', '.users-mention', function() {
+        var who = '@' + $(this).data('username') + ' ';
+
+        appendTextToMessage(who);
+    });
+
     // websockets behaviour
     socket
         .on('user join', function(data) {
@@ -141,6 +154,11 @@ $(document).ready(function() {
         $newMessage = $('<div>')
             .html(content);
 
+        // if its mention, add class
+        if (message.content.indexOf('@' + username) !== -1) {
+            $newMessage.addClass('for-me-messages');
+        }
+
         // fix for Chrome
         $('html, body').animate({scrollTop: messagesHeight}, 'slow');
 
@@ -158,17 +176,27 @@ $(document).ready(function() {
 	 * @param {object} users
 	 */
     function updateUserList(users) {
-		var usersContent;
+		var usersContent,
+            usersList = [],
+            i = 0;
 
 		$('.total-count').text(users.total);
 		$('.guests-count').text(users.guests);
 
-		usersContent = users.users;
-		if (users.usernames.length) {
-			usersContent += ' (' + users.usernames.join(', ') + ')';
-		}
+        for (i; i < users.usernames.length; i++) {
+            usersList.push(
+                _.template(templates.users.username, {
+                    username: users.usernames[i]
+                })
+            );
+        }
 
-		$('.auth-count').text(usersContent);
+        usersContent = _.template(templates.users.usernames, {
+            usersCount: users.users,
+            usernames:  usersList.join(', ')
+        });
+
+		$('.auth-count').html(usersContent);
 	}
 
     function typeMessage(action, username) {
@@ -237,7 +265,7 @@ $(document).ready(function() {
             });
         });
 	// close popover on outside click
-	$('body').on('click', function (e) {
+	$body.on('click', function (e) {
 		if ($(e.target).hasClass('smiles')) {
 			return true;
 		}
